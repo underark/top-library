@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	const tbody = document.querySelector("tbody");
 
 	form.addEventListener("submit", (e) => {
-		console.log("attached");
 		e.preventDefault();
 		const data = new FormData(form);
 		const title = data.get("title");
@@ -29,26 +28,36 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function showLibrary() {
+		clearLibrary();
+		for (let book of library) {
+			const row = createRow(book.title, book.author, book.pages, book.read);
+			tbody.appendChild(row);
+		}
+	}
+
+	function clearLibrary() {
 		while(tbody.firstChild) {
 			tbody.removeChild(tbody.lastChild);
 		}
+	}
 
-		for (let book of library) {
-			const row = document.createElement("tr");
-			row.classList.add(book.id);
-			const title = document.createElement("td");
-			title.textContent = book.title
-			const author = document.createElement("td");
-			author.textContent = book.author
-			const pages = document.createElement("td");
-			pages.textContent = book.pages;
-			const read = document.createElement("td");
-			read.textContent = "false";
-			row.appendChild(title);
-			row.appendChild(author);
-			row.appendChild(pages);
-			row.appendChild(read);
-			tbody.appendChild(row);
-		}
+	function createTableData(content) {
+		const element = document.createElement("td");
+		element.textContent = content;
+		return element;
+	}
+
+	function createRow(title, author, pages, read) {
+		const row = document.createElement("tr");
+		row.classList.add(crypto.randomUUID());
+		const bookTitle = createTableData(title);
+		const bookAuthor = createTableData(author);
+		const bookPages = createTableData(pages);
+		const bookRead = createTableData(read);
+		row.appendChild(bookTitle);
+		row.appendChild(bookAuthor);
+		row.appendChild(bookPages);
+		row.appendChild(bookRead);
+		return row
 	}
 });
