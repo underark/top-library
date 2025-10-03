@@ -22,6 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		this.read = read;
 	}
 
+	Book.prototype.markRead = function() {
+		this.read = (this.read === "read") ? "not read" : "read";
+	}
+
 	function storeBook(title, author, pages, read) {
 		let newBook = new Book(title, author, pages, read);
 		library.push(newBook);
@@ -31,7 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		clearLibrary();
 		for (let book of library) {
 			const row = createRow(book.title, book.author, book.pages, book.read);
+			const readButton = createReadButton(book.id);
 			const deleteButton = createDeleteButton(row, book.id);
+			row.appendChild(readButton);
 			row.appendChild(deleteButton);
 			tbody.appendChild(row);
 		}
@@ -52,12 +58,27 @@ document.addEventListener("DOMContentLoaded", () => {
 	function createDeleteButton(row, id) {
 		const deleteButtonCell = document.createElement("td");
 		const deleteButton = document.createElement("button");
+		deleteButton.textContent = "Delete";
 		deleteButton.addEventListener("click", () => {
 			tbody.removeChild(row);
 			library = library.filter(libraryBook => libraryBook.id !== id);
 		});
 		deleteButtonCell.appendChild(deleteButton);
 		return deleteButtonCell;
+	}
+
+	function createReadButton(id) {
+		const readButtonCell = document.createElement("td");
+		const readButton = document.createElement("button");
+		readButton.textContent = "Mark Read";
+		readButton.addEventListener("click", () => {
+			library.forEach(book => {
+				if (book.id === id) book.markRead();
+				showLibrary();
+			});
+		});
+		readButtonCell.appendChild(readButton);
+		return readButtonCell;
 	}
 
 	function createRow(title, author, pages, read) {
