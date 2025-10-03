@@ -31,15 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		clearLibrary();
 		for (let book of library) {
 			const row = createRow(book.title, book.author, book.pages, book.read);
-			row.classList.add(book.id);
-			const deleteButtonCell = document.createElement("td");
-			const deleteButton = document.createElement("button");
-			deleteButtonCell.appendChild(deleteButton);
-			deleteButton.addEventListener("click", () => {
-				tbody.removeChild(row);
-				library = library.filter(libraryBook => libraryBook.id !== book.id);
-			});
-			row.appendChild(deleteButtonCell);
+			const deleteButton = createDeleteButton(row, book.id);
+			row.appendChild(deleteButton);
 			tbody.appendChild(row);
 		}
 	}
@@ -54,6 +47,17 @@ document.addEventListener("DOMContentLoaded", () => {
 		const element = document.createElement("td");
 		element.textContent = content;
 		return element;
+	}
+
+	function createDeleteButton(row, id) {
+		const deleteButtonCell = document.createElement("td");
+		const deleteButton = document.createElement("button");
+		deleteButton.addEventListener("click", () => {
+			tbody.removeChild(row);
+			library = library.filter(libraryBook => libraryBook.id !== id);
+		});
+		deleteButtonCell.appendChild(deleteButton);
+		return deleteButtonCell;
 	}
 
 	function createRow(title, author, pages, read) {
