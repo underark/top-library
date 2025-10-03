@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+	const showFormButton = document.querySelector("#show-form");
 	const form = document.querySelector("form");
 	const tbody = document.querySelector("tbody");
 	let library = [];
@@ -11,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const pages = data.get("pages");
 		const read = data.get("read");
 		storeBook(title, author, pages, read);
+		clearLibrary();
 		showLibrary();
 	});
 
@@ -19,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		this.title = title;
 		this.author = author;
 		this.pages = pages;
-		this.read = read;
+		this.read = (read === null) ? "not read" : read;
 	}
 
 	Book.prototype.markRead = function() {
@@ -32,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function showLibrary() {
-		clearLibrary();
 		for (let book of library) {
 			const row = createRow(book.title, book.author, book.pages, book.read);
 			const readButton = createReadButton(book.id);
@@ -60,8 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		const deleteButton = document.createElement("button");
 		deleteButton.textContent = "Delete";
 		deleteButton.addEventListener("click", () => {
-			tbody.removeChild(row);
 			library = library.filter(libraryBook => libraryBook.id !== id);
+			clearLibrary();
+			showLibrary();
 		});
 		deleteButtonCell.appendChild(deleteButton);
 		return deleteButtonCell;
@@ -74,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		readButton.addEventListener("click", () => {
 			library.forEach(book => {
 				if (book.id === id) book.markRead();
+				clearLibrary();
 				showLibrary();
 			});
 		});
@@ -93,4 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		row.appendChild(bookRead);
 		return row
 	}
+
+	showFormButton.addEventListener("click", () => {
+		const container = document.querySelector("#container");
+		container.classList.add("grid-small");
+		container.classList.remove("grid-big");
+		form.classList.add("form-visible");
+		form.classList.remove("form-hidden");
+	})
 });
