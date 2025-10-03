@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const form = document.querySelector("form");
-	const library = [];
 	const tbody = document.querySelector("tbody");
+	let library = [];
 
 	form.addEventListener("submit", (e) => {
 		e.preventDefault();
@@ -31,6 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
 		clearLibrary();
 		for (let book of library) {
 			const row = createRow(book.title, book.author, book.pages, book.read);
+			row.classList.add(book.id);
+			const deleteButtonCell = document.createElement("td");
+			const deleteButton = document.createElement("button");
+			deleteButtonCell.appendChild(deleteButton);
+			deleteButton.addEventListener("click", () => {
+				tbody.removeChild(row);
+				library = library.filter(libraryBook => libraryBook.id !== book.id);
+			});
+			row.appendChild(deleteButtonCell);
 			tbody.appendChild(row);
 		}
 	}
@@ -49,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function createRow(title, author, pages, read) {
 		const row = document.createElement("tr");
-		row.classList.add(crypto.randomUUID());
 		const bookTitle = createTableData(title);
 		const bookAuthor = createTableData(author);
 		const bookPages = createTableData(pages);
