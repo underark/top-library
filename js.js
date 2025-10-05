@@ -56,15 +56,16 @@ document.addEventListener("DOMContentLoaded", () => {
 		return element;
 	}
 
-	function createDeleteButton(row, id) {
+	function createDeleteButton(id) {
 		const deleteButtonCell = document.createElement("td");
 		const deleteButton = document.createElement("button");
-		deleteButton.textContent = "Delete";
+		deleteButton.textContent = "❌";
 		deleteButton.addEventListener("click", () => {
 			library = library.filter(libraryBook => libraryBook.id !== id);
 			clearLibrary();
 			showLibrary();
 		});
+		deleteButton.style.width = "fit-content";
 		deleteButtonCell.appendChild(deleteButton);
 		return deleteButtonCell;
 	}
@@ -72,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	function createReadButton(id) {
 		const readButtonCell = document.createElement("td");
 		const readButton = document.createElement("button");
-		readButton.textContent = "Mark Read";
+		readButton.textContent = "✅";
 		readButton.addEventListener("click", () => {
 			library.forEach(book => {
 				if (book.id === id) book.markRead();
@@ -98,10 +99,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	showFormButton.addEventListener("click", () => {
-		const container = document.querySelector("#container");
-		container.classList.add("grid-small");
-		container.classList.remove("grid-big");
-		form.classList.add("form-visible");
-		form.classList.remove("form-hidden");
+		const container = document.querySelector("body");
+		container.classList.toggle("grid-small");
+		form.classList.toggle("form-visible");
+		showFormButton.textContent = (showFormButton.textContent === "Add book") ? "Close" : "Add book";
 	})
 });
